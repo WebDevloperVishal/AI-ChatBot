@@ -27,5 +27,8 @@
     "nodemailer": "^7.0.6",
     "openai": "^5.16.0",
     "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "prisma": "^6.15.0"
   }
 }
