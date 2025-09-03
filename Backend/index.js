@@ -1,8 +1,12 @@
 import express  from 'express';
-const app = express()
-const port = 
+import dotenv from "dotenv";
 
-app.use(express.json())
+dotenv.config()
+
+const app = express()
+const port = process.env.PORT;
+
+// app.use(express.json())
 
 app.get('/', (req, res) =>{ 
     res.send('Backend is running')
