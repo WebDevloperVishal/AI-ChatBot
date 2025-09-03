@@ -57,3 +57,5 @@ export const LoginController = async(req , res) =>{
     
     return res.status(200).json({ message: "login successfully",user,token})
 }
+
+// Get User
