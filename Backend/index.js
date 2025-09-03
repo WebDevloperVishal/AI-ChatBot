@@ -1,16 +1,19 @@
 import express  from 'express';
 import dotenv from "dotenv";
+import rootRouter from './outes/index.js';
 
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT;
 
-// app.use(express.json())
+app.use(express.json())
 
 app.get('/', (req, res) =>{ 
     res.send('Backend is running')
 })
+
+app.use('/api', rootRouter)
 
 
 app.listen(port, () => {
