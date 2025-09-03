@@ -1,6 +1,11 @@
 import { prismaClient } from "../outes/index.js";
-import { userSchema } from "../schema/user.js";
-import { compare, compareSync, hashSync } from "bcryptjs";
+import { userSchema , EmailLoginSchema} from "../schema/user.js";
+import { compareSync, hashSync } from "bcryptjs";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 
 export const RegisterController = async(req , res) =>{
@@ -32,7 +37,6 @@ export const LoginController = async(req , res) =>{
     }
 
     const user = await prismaClient.user.findUnique({
-
         where: {
             email: userData.email
         }
@@ -45,8 +49,11 @@ export const LoginController = async(req , res) =>{
     const isPasswordMatch = await compareSync(userData.password , user.password);
 
     if(!isPasswordMatch){
-        return res.status(401).json({ message: "User created successfully",user})
+        return res.status(401).json({ message: " Invaid password"})
     }
 
-    return res.status(200).json({ message: "login successfully",user})
+    const token = jwt.sign({ id: user.id}, JWT_SECRET, {expiresIn: "1h"})
+    // console.log(token);
+    
+    return res.status(200).json({ message: "login successfully",user,token})
 }
