@@ -117,7 +117,28 @@ export const OTPLoginContoller = async (req, res) => {
 // OYP verfiy 
 
 export const OTPverifyLoginContoller = async (req,res)=>{
-    
+    const phoneData = PhoneVerifyLoginSchema.parse(req.body);
+
+    if(!phoneData.otp){
+        return res.status(400).json({message:"OTP is mandatory"})
+    }
+    const user = await prismaClient.user.findUnique({
+        where:{
+            phoneNo:req.user.phoneNo
+        }
+    })
+
+    if(!user){
+        return res.status(404).json({message:"User not found"})
+    }
+
+    if(phoneData.otp !==req.user.otp){
+        return res.status(400).json({message:"Invalid OTP"})
+    }
+
+    const token = jwt.sign({id:user.id},JWT_SECRET,{expiresIn:"1h"});
+
+    return res.status(200).json({message:"Login Successful"})
 }
 
 // Get User
