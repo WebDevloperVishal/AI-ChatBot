@@ -102,6 +102,9 @@ export const OTPLoginContoller = async (req, res) => {
      <p style="font-size: 14px; color: #7F8C8D;">If you didn’t request this, you can safely ignore this email.</p> </div>`
     })
 
+    // while regestring if we send correct enail then we wil fget the correct output from mail and 
+    // if we send it wrong email id then output is not coreect While Register User
+
     const token = jwt.sign({ id: phoneExists.id, phoneNo: phoneExists.phoneNo, otp }, JWT_SECRET, { expiresIn: "1h" })
     return res.status(200).json({
         message: "OTP send Successfully",
