@@ -89,10 +89,11 @@ export const OTPLoginContoller = async(req,res)=>{
 
     const otp = Otpgenerator();
 
-    const token = jwt.sign({id:phoneExists.id,phoneNo:phoneExists.phoneNo,otp},)
+    const token = jwt.sign({id:phoneExists.id,phoneNo:phoneExists.phoneNo,otp},JWT_SECRET,{expiresIn:"1h"})
     return res.status(200).json({
         message: "OTP send Successfully",
-        otp
+        // otp
+        token
     })
 }
 
