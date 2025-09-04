@@ -13,5 +13,4 @@ export const SendEmail = async ({to,subject,html})=>{
       pass: MAIL_PASSWORD,
     },
 });
-
 }
