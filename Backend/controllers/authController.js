@@ -59,18 +59,18 @@ export const LoginController = async(req , res) =>{
 }
 
 // Get User
-export const GetUserContoller = async (req,res)=>{
-    const id = req.user.id;
+export const GetUserController = async (req, res,next) => {
+  const id = req.user.id;
 
-    const user = await prismaClient.user.findunique({
-        where :{
-            id:id
-        }
-    })
+  const user = await prismaClient.user.findUnique({
+    where: {
+      id: id,
+    },
+  });
 
-    if(!user){
-        return res.status(404).json({message: "User not found"})
-    }
+  if (!user) {
+    return next(new NotFoundException("User not found",ErrorCodes.USER_NOT_FOUND))
+  }
 
-    return res.status(200).json({message:"User Retrevied Successfully",user})
-}
+  return res.status(200).json({ message: "User Retreived Sucessfully", user });
+};
