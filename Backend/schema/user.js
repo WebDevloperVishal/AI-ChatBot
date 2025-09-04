@@ -16,6 +16,6 @@ export const PhoneLoginSchema = z.object({
     phoneNo:z.string().min(10),
 })
 
-export const OTPverifyLoginContoller = z.object({
+export const PhoneVerifyLoginSchema = z.object({
     otp:z.number().min(6),
 })

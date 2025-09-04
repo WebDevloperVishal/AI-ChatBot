@@ -1,5 +1,5 @@
 import { prismaClient } from "../outes/index.js";
-import { userSchema, EmailLoginSchema, PhoneLoginSchema } from "../schema/user.js";
+import { userSchema, EmailLoginSchema, PhoneLoginSchema, PhoneVerifyLoginSchema} from "../schema/user.js";
 import { compareSync, hashSync } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -116,7 +116,7 @@ export const OTPLoginContoller = async (req, res) => {
 
 // OYP verfiy 
 
-export const OTPverifyLoginContoller = async (req,res)=>{
+export const OTPverifyLoginController = async (req,res)=>{
     const phoneData = PhoneVerifyLoginSchema.parse(req.body);
 
     if(!phoneData.otp){
@@ -138,8 +138,9 @@ export const OTPverifyLoginContoller = async (req,res)=>{
 
     const token = jwt.sign({id:user.id},JWT_SECRET,{expiresIn:"1h"});
 
-    return res.status(200).json({message:"Login Successful"})
+    return res.status(200).json({message:"Login Successful",token})
 }
+
 
 // Get User
 export const GetUserController = async (req, res, next) => {
