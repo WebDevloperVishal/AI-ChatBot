@@ -1,5 +1,5 @@
 import { prismaClient } from "../outes/index.js";
-import { userSchema , EmailLoginSchema} from "../schema/user.js";
+import { userSchema , EmailLoginSchema, PhoneLoginSchema} from "../schema/user.js";
 import { compareSync, hashSync } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -8,6 +8,7 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
+// Regester User
 export const RegisterController = async(req , res) =>{
     const userData = userSchema.parse(req.body)
 
@@ -29,6 +30,7 @@ export const RegisterController = async(req , res) =>{
     return res.status(201).json({ message: "User create successfully",user})
 };
 
+// Login User
 export const LoginController = async(req , res) =>{
     const userData = EmailLoginSchema.parse(req.body)
 
@@ -57,6 +59,42 @@ export const LoginController = async(req , res) =>{
     
     return res.status(200).json({ message: "login successfully",user,token})
 }
+
+// Function to generate random otp
+
+function Otpgenerator(){
+    const randomNumber = Math.random()*900000
+    const otp = Math.floor(randomNumber)+100000;
+    return otp;
+}
+
+// otp-based login
+
+export const OTPLoginContoller = async(req,res)=>{
+    const phoneNumber = PhoneLoginSchema.parse(req.body);
+
+    if(!phoneNumber){
+        return res.status(400).json({message: "phone number is required"});
+    }
+
+    const phoneExists = await prismaClient.user.findUnique({
+        where:{
+            phoneNo:phoneNumber.phoneNo
+        }
+    })
+
+    if(!phoneExists){
+        return res.status(404).json({message:"Phone number was not found"})
+    }
+
+    const otp = Otpgenerator();
+
+    return res.status(200).json({
+        message: "OTP send Successfully",
+        otp
+    })
+}
+
 
 // Get User
 export const GetUserController = async (req, res,next) => {

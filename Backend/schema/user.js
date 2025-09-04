@@ -11,3 +11,7 @@ export const EmailLoginSchema = z.object({
     email:z.string().email(),
     password:z.string().min(6),
 })
+
+export const PhoneLoginSchema = z.object({
+    phoneNo:z.string().min(10),
+})
