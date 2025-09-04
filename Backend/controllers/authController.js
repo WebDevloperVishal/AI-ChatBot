@@ -114,6 +114,12 @@ export const OTPLoginContoller = async (req, res) => {
 }
 
 
+// OYP verfiy 
+
+export const OTPverifyLoginContoller = async (req,res)=>{
+    
+}
+
 // Get User
 export const GetUserController = async (req, res, next) => {
     const id = req.user.id;
