@@ -8,7 +8,6 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-
 // Regester User
 export const RegisterController = async (req, res) => {
     const userData = userSchema.parse(req.body)
