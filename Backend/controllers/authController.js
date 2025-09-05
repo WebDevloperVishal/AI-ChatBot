@@ -4,7 +4,7 @@ import { compareSync, hashSync } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { SendEmail } from "../services/gmail.js";
-import redis from "../services/redis.js";
+import { redis } from "../services/redis.js";
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
