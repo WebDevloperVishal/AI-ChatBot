@@ -140,7 +140,6 @@ export const OTPverifyLoginController = async (req,res)=>{
 
     // console.log(typeof phoneData.otp);
 
-    // const storedOTP = await redis.get(`otp:${user.phoneNo}`
       const storedOtp = await redis.get(`otp:${user.phoneNo}`);
 
     
