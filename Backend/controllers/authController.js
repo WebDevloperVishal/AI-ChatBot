@@ -4,6 +4,7 @@ import { compareSync, hashSync } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { SendEmail } from "../services/gmail.js";
+import redis from "../services/redis.js";
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -104,7 +105,8 @@ export const OTPLoginContoller = async (req, res) => {
     // while regestring if we send correct enail then we wil fget the correct output from mail and 
     // if we send it wrong email id then output is not coreect While Register User
 
-
+    // set OTP
+    await redis.set(`otp:${phoneExists.phoneNo}`,otp,'EX',300) //After 5 mintes the OTP will exprie
 
     const token = jwt.sign({ 
         id: phoneExists.id, phoneNo: phoneExists.phoneNo, otp }, 
