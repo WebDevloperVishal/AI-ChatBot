@@ -104,7 +104,12 @@ export const OTPLoginContoller = async (req, res) => {
     // while regestring if we send correct enail then we wil fget the correct output from mail and 
     // if we send it wrong email id then output is not coreect While Register User
 
-    const token = jwt.sign({ id: phoneExists.id, phoneNo: phoneExists.phoneNo, otp }, JWT_SECRET, { expiresIn: "1h" })
+
+
+    const token = jwt.sign({ 
+        id: phoneExists.id, phoneNo: phoneExists.phoneNo, otp }, 
+        JWT_SECRET, { expiresIn: "1h" }
+    );
     return res.status(200).json({
         message: "OTP send Successfully",
         // otp
