@@ -106,7 +106,8 @@ export const OTPLoginContoller = async (req, res) => {
     // if we send it wrong email id then output is not coreect While Register User
 
     // set OTP
-    await redis.set(`otp:${phoneExists.phoneNo}`,otp,'EX',300) //After 5 mintes the OTP will exprie
+    // await redis.set(`otp:${phoneExists.phoneNo}`,otp,'EX',300) //After 5 mintes the OTP will exprie
+    await redis.set(`otp:${phoneExists.phoneNo}`,otp,'EX',300) //5 minutes
 
     const token = jwt.sign({ 
         id: phoneExists.id, phoneNo: phoneExists.phoneNo, otp }, 
@@ -140,9 +141,11 @@ export const OTPverifyLoginController = async (req,res)=>{
 
     // console.log(typeof phoneData.otp);
 
-    const storedOTP = await redis.get(`otp:${user.phoneNo}`)
+    // const storedOTP = await redis.get(`otp:${user.phoneNo}`
+      const storedOtp = await redis.get(`otp:${user.phoneNo}`);
+
     
-    if(phoneData.otp !==req.user.otp){
+    if(phoneData.otp !== storedOtp){
         return res.status(400).json({message:"Invalid OTP"})
     }
 
