@@ -138,7 +138,7 @@ export const OTPverifyLoginController = async (req,res)=>{
         return res.status(404).json({message:"User not found"})
     }
 
-    // console.log(typeof phoneData.otp);
+    console.log(typeof phoneData.otp);
 
       const storedOtp = await redis.get(`otp:${user.phoneNo}`);
 
