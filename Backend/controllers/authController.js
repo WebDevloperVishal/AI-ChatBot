@@ -121,7 +121,6 @@ export const OTPLoginContoller = async (req, res) => {
 
 
 // OYP verfiy 
-
 export const OTPverifyLoginController = async (req,res)=>{
     const phoneData = PhoneVerifyLoginSchema.parse(req.body);
 
