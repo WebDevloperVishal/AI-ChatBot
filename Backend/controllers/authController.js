@@ -69,9 +69,9 @@ function Otpgenerator() {
     return otp;
 }
 
-// otp-based login
+// // otp-based login
 
-export const OTPLoginContoller = async (req, res) => {
+export const OTPLoginController = async (req, res) => {
     const phoneNumber = PhoneLoginSchema.parse(req.body);
 
     if (!phoneNumber) {
@@ -106,7 +106,9 @@ export const OTPLoginContoller = async (req, res) => {
     // if we send it wrong email id then output is not coreect While Register User
 
     // set OTP
-    await redis.set(`otp:${phoneExists.phoneNo}`,otp,'EX',300) //5 minutes
+    // await redis.set(`otp:${phoneExists.phoneNo}`,otp,'EX',300) //5 minutes
+    // await redis.setex(`otp:${phoneExists.phoneNo}`, 300, otp);
+    await redis.set(`otp:${phoneExists.phoneNo}`, otp, 'EX', 300);
 
     const token = jwt.sign({ 
         id: phoneExists.id, phoneNo: phoneExists.phoneNo, otp }, 
@@ -118,7 +120,6 @@ export const OTPLoginContoller = async (req, res) => {
         token
     })
 }
-
 
 // OYP verfiy 
 export const OTPverifyLoginController = async (req,res)=>{
