@@ -106,8 +106,6 @@ export const OTPLoginController = async (req, res) => {
     // if we send it wrong email id then output is not coreect While Register User
 
     // set OTP
-    // await redis.set(`otp:${phoneExists.phoneNo}`,otp,'EX',300) //5 minutes
-    // await redis.setex(`otp:${phoneExists.phoneNo}`, 300, otp);
     await redis.set(`otp:${phoneExists.phoneNo}`, otp, 'EX', 300);
 
     const token = jwt.sign({ 
