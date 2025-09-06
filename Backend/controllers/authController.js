@@ -141,7 +141,6 @@ export const OTPverifyLoginController = async (req,res)=>{
 
       const storedOtp = await redis.get(`otp:${user.phoneNo}`);
 
-    
     if(phoneData.otp !== storedOtp){
         return res.status(400).json({message:"Invalid OTP"})
     }
