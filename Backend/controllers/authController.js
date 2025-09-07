@@ -1,10 +1,10 @@
 import { prismaClient } from "../outes/index.js";
-import { userSchema, EmailLoginSchema, PhoneLoginSchema, PhoneVerifyLoginSchema} from "../schema/user.js";
+import { userSchema, EmailLoginSchema, PhoneLoginSchema, PhoneVerifyLoginSchema } from "../schema/user.js";
 import { compareSync, hashSync } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { SendEmail } from "../services/gmail.js";
-import  redis  from "../services/redis.js";
+import redis from "../services/redis.js";
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -63,13 +63,19 @@ export const LoginController = async (req, res) => {
 
 // Function to generate random otp
 
+// function Otpgenerator() {
+//     const randomNumber = Math.random() * 900000
+//     const otp = Math.floor(randomNumber) + 100000;
+//     return otp;
+// }
+
 function Otpgenerator() {
-    const randomNumber = Math.random() * 900000
+    const randomNumber = Math.random() * 900000;
     const otp = Math.floor(randomNumber) + 100000;
     return otp;
 }
 
-// // otp-based login
+// otp-based login
 
 export const OTPLoginController = async (req, res) => {
     const phoneNumber = PhoneLoginSchema.parse(req.body);
@@ -106,47 +112,46 @@ export const OTPLoginController = async (req, res) => {
     // if we send it wrong email id then output is not coreect While Register User
 
     // set OTP
-    await redis.set(`otp:${phoneExists.phoneNo}`, otp, 'EX', 300);
+    await redis.set(`otp:${phoneExists.phoneNo}`, otp, 'EX', 300) //5 minutes
 
-    const token = jwt.sign({ 
-        id: phoneExists.id, phoneNo: phoneExists.phoneNo, otp }, 
-        JWT_SECRET, { expiresIn: "1h" }
+    const token = jwt.sign({id: phoneExists.id, phoneNo: phoneExists.phoneNo },JWT_SECRET,
+        {expiresIn: "1h" }
     );
     return res.status(200).json({
-        message: "OTP send Successfully",
-        // otp
-        token
-    })
-}
+        message: "OTP Sent Sucessfully",
+        token,
+    });
+};
+
 
 // OYP verfiy 
-export const OTPverifyLoginController = async (req,res)=>{
+export const OTPverifyLoginController = async (req, res) => {
     const phoneData = PhoneVerifyLoginSchema.parse(req.body);
 
-    if(!phoneData.otp){
-        return res.status(400).json({message:"OTP is mandatory"})
+    if (!phoneData.otp) {
+        return res.status(400).json({ message: "OTP is mandatory" })
     }
     const user = await prismaClient.user.findUnique({
-        where:{
-            phoneNo:req.user.phoneNo
+        where: {
+            phoneNo: req.user.phoneNo
         }
     })
 
-    if(!user){
-        return res.status(404).json({message:"User not found"})
+    if (!user) {
+        return res.status(404).json({ message: "User not found" })
     }
 
     console.log(typeof phoneData.otp);
 
-      const storedOtp = await redis.get(`otp:${user.phoneNo}`);
+    const storedOtp = await redis.get(`otp:${user.phoneNo}`);
 
-    if(phoneData.otp !== storedOtp){
-        return res.status(400).json({message:"Invalid OTP"})
+    if (phoneData.otp !== storedOtp) {
+        return res.status(400).json({ message: "Invalid OTP" })
     }
 
-    const token = jwt.sign({id:user.id},JWT_SECRET,{expiresIn:"1h"});
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
 
-    return res.status(200).json({message:"Login Successful",token})
+    return res.status(200).json({ message: "Login Successful", token })
 }
 
 
