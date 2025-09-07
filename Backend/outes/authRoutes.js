@@ -8,8 +8,8 @@ const authRouter = express.Router();
 
 authRouter.post('/register',RegisterController);
 authRouter.post('/login',ratelimiter,LoginController);
-authRouter.get("/getUser",authMiddleware,GetUserController)
-authRouter.post('/otp-sent',OTPLoginController);
+authRouter.get("/getUser",ratelimiter,authMiddleware,GetUserController)
+authRouter.post('/otp-sent',ratelimiter,OTPLoginController);
 authRouter.post('/otp-verify',authMiddleware,OTPverifyLoginController);
 
 
