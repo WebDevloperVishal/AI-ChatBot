@@ -7,6 +7,7 @@ import { SendEmail } from "../services/gmail.js";
 import redis from "../services/redis.js";
 import { BadRequestExecption } from "../exceptions/bad-request.js";
 import { ErrorCodes } from "../exceptions/root.js";
+import { NotFoundExecption } from "../exceptions/not-found.js";
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -48,7 +49,7 @@ export const LoginController = async (req, res, next) => {
     })
 
     if (!user) {
-        return next (new BadRequestExecption("User not found",ErrorCodes.USER_NOT_FOUND))
+        return next (new NotFoundExecption("User not found",ErrorCodes.USER_NOT_FOUND))
     }
 
     const isPasswordMatch = await compareSync(userData.password, user.password);
@@ -77,7 +78,7 @@ export const OTPLoginController = async (req, res) => {
     const phoneNumber = PhoneLoginSchema.parse(req.body);
 
     if (!phoneNumber) {
-        return res.status(400).json({ message: "phone number is required" });
+        return next (new BadRequestExecption("Phone number is required",ErrorCodes.PHONE_NUMBER_REQUIRED))
     }
 
     const phoneExists = await prismaClient.user.findUnique({
@@ -87,7 +88,7 @@ export const OTPLoginController = async (req, res) => {
     })
 
     if (!phoneExists) {
-        return res.status(404).json({ message: "Phone number was not found" })
+        return next (new NotFoundExecption("Phone number was not found",ErrorCodes.USER_NOT_FOUND)) 
     }
 
     const otp = Otpgenerator();
@@ -127,7 +128,7 @@ export const OTPverifyLoginController = async (req, res) => {
     const phoneData = PhoneVerifyLoginSchema.parse(req.body);
 
     if (!phoneData.otp) {
-        return res.status(400).json({ message: "OTP is mandatory" })
+        return next (new BadRequestExecption("OTP is required",ErrorCodes.OTP_IS_MANDATORY))
     }
     const user = await prismaClient.user.findUnique({
         where: {
@@ -136,7 +137,7 @@ export const OTPverifyLoginController = async (req, res) => {
     })
 
     if (!user) {
-        return res.status(404).json({ message: "User not found" })
+        return next (new NotFoundExecption("User not found",ErrorCodes.USER_NOT_FOUND))
     }
 
     console.log(typeof phoneData.otp);
@@ -144,7 +145,7 @@ export const OTPverifyLoginController = async (req, res) => {
     const storedOtp = await redis.get(`otp:${user.phoneNo}`);
 
     if (phoneData.otp !== storedOtp) {
-        return res.status(400).json({ message: "Invalid OTP" })
+        return next ( new BadRequestExecption("Invalid OTP",ErrorCodes.INVALID_OTP))
     }
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
