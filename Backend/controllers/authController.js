@@ -5,12 +5,14 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { SendEmail } from "../services/gmail.js";
 import redis from "../services/redis.js";
+import { BadRequestExecption } from "../exceptions/bad-request.js";
+import { ErrorCodes } from "../exceptions/root.js";
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // Regester User
-export const RegisterController = async (req, res) => {
+export const RegisterController = async (req, res, next) => {
     const userData = userSchema.parse(req.body)
 
     if (!userData.name || !userData.email || !userData.password || !userData.phoneNo) {
@@ -28,15 +30,15 @@ export const RegisterController = async (req, res) => {
         }
     })
 
-    return res.status(201).json({ message: "User create successfully", user })
+    return next (new BadRequestExecption("All fields are required",ErrorCodes))
 };
 
 // Login User
-export const LoginController = async (req, res) => {
+export const LoginController = async (req, res, next) => {
     const userData = EmailLoginSchema.parse(req.body)
 
     if (!userData.email || !userData.password) {
-        return res.status(400).json({ message: "Please fill all the feilds" });
+        return next (new BadRequestExecption("All fields are required",ErrorCodes))
     }
 
     const user = await prismaClient.user.findUnique({
@@ -46,13 +48,13 @@ export const LoginController = async (req, res) => {
     })
 
     if (!user) {
-        return res.status(404).json({ message: "User not found" })
+        return next (new BadRequestExecption("User not found",ErrorCodes.USER_NOT_FOUND))
     }
 
     const isPasswordMatch = await compareSync(userData.password, user.password);
 
     if (!isPasswordMatch) {
-        return res.status(401).json({ message: " Invaid password" })
+        return next (new BadRequestExecption("Invalid password", ErrorCodes.INVALID_PASSWORD))
     }
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" })
