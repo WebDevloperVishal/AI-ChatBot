@@ -1,6 +1,6 @@
-import redis from "../services/redis.js";
-
 // Rate Limiter Middleware
+
+import redis from "../services/redis.js";
 
 export const ratelimiter = async (req, res, next) => {
     const ip = req.ip; // Get the IP address of the incoming request.
