@@ -1,17 +1,30 @@
+// import redis from "../services/redis.js";
 
+// export const ratelimiter = async (req,res,next) => {
+//     const ip = req.ip;
+
+//     const key = `rate:${ip}`
+
+//     try {
+//         const request = await redis.incr(key);
+//         if (request == 1) await redis.expire(key,300);
+
+//         if (request>5){
+//             return res.status(429).json({
+//                 message: "To much request, try again afterwords",
+//             }); 
+//         }
+
+//         next();
+//     } catch (error) {
+//         return res.status(500).json({message:"Redis server error"})
+//     }
+// }
 
 import redis from "../services/redis.js";
 
-/**
- * Rate Limiter Middleware
- * 
- * This middleware limits the number of requests a single IP address can make within a 5-minute window.
- * It uses Redis to track the number of requests per IP and enforces a limit of 5 requests.
- * 
- * @param {Object} req - The incoming request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function in the stack.
- */
+// Rate Limiter Middleware
+
 export const ratelimiter = async (req, res, next) => {
     const ip = req.ip; // Get the IP address of the incoming request.
 
