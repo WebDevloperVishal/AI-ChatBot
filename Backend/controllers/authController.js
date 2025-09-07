@@ -63,12 +63,6 @@ export const LoginController = async (req, res) => {
 
 // Function to generate random otp
 
-// function Otpgenerator() {
-//     const randomNumber = Math.random() * 900000
-//     const otp = Math.floor(randomNumber) + 100000;
-//     return otp;
-// }
-
 function Otpgenerator() {
     const randomNumber = Math.random() * 900000;
     const otp = Math.floor(randomNumber) + 100000;
