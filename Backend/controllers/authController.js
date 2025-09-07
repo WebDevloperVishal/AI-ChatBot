@@ -114,7 +114,9 @@ export const OTPLoginController = async (req, res) => {
     // set OTP
     await redis.set(`otp:${phoneExists.phoneNo}`, otp, 'EX', 300) //5 minutes
 
-    const token = jwt.sign({id: phoneExists.id, phoneNo: phoneExists.phoneNo },JWT_SECRET,
+    const token = jwt.sign(
+        {id: phoneExists.id, phoneNo: phoneExists.phoneNo },
+        JWT_SECRET,
         {expiresIn: "1h" }
     );
     return res.status(200).json({
