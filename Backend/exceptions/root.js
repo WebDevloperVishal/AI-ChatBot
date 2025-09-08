@@ -1,16 +1,16 @@
-export class HttpException extends Error{
-    constructor(message, errorCode,statusCode,errors){
-        super (message)
 
+export class HttpException extends Error{
+    constructor(message,errorCode,statusCode,errors){
+        super(message)
+        
         this.message = message
         this.statusCode = statusCode
         this.errors = errors
         this.errorCode = errorCode;
-
-    };
+    }
 }
 
-// Error codes
+//Error codes
 
 export const ErrorCodes = {
   //add error codes here

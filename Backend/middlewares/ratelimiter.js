@@ -1,4 +1,3 @@
-// Rate Limiter Middleware
 
 import redis from "../services/redis.js";
 
@@ -9,7 +8,7 @@ export const ratelimiter = async(req, res, next) => {
 
     try {
         const requests = await redis.incr(key);
-        if(requests == 1) await redis.expire(key, 60); // 1 minute
+        if(requests == 1) await redis.expire(key, 300); // 5 minutes
 
         if(requests>5){
             return res
