@@ -1,4 +1,3 @@
-
 export class HttpException extends Error{
     constructor(message,errorCode,statusCode,errors){
         super(message)

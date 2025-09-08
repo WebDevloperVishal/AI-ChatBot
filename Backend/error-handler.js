@@ -1,6 +1,6 @@
 import { ZodError } from "zod";
 import { ErrorCodes, HttpException } from "./exceptions/root.js";
-import { UnprocessableEntityException } from "./exceptions/unprocessable-entity.js";
+import { UnprocessableEntityException } from "./exceptions/unprocessable_entity.js";
 import { InternalServerErrorException } from "./exceptions/internal-error.js";
 
 export const errorHandler = (method) => {
