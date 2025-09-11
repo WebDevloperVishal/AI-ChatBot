@@ -23,14 +23,13 @@
     "@qdrant/js-client-rest": "^1.15.1",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
-    "express": "^5.1.0",
+    "express": "^2.5.11",
+    "generate": "^0.8.6",
     "ioredis": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.6",
     "openai": "^5.16.0",
+    "prisma": "^6.15.0",
     "zod": "^3.25.76"
-  },
-  "devDependencies": {
-    "prisma": "^6.15.0"
   }
 }
